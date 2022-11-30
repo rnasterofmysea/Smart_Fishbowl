@@ -38,6 +38,8 @@
 
 ## Hardware Configuration
 
+![image](https://user-images.githubusercontent.com/81907470/204811618-90469649-6c7b-46e3-becd-3fb59f42ca7a.png)
+
 ### Board
 
 - Arduino
@@ -51,15 +53,23 @@
 
 ### Software Configuration
 
--
--
--
+- Webservice: React
+- Webserver: FastAPI
+- ProgramLanguage: Python , Arduino.c
+
+
 
 ## etc Equipment
 
 - water bowl
--
--
+
+
+# System Flow-Diagram
+
+![image](https://user-images.githubusercontent.com/81907470/204813416-28406883-f15b-4c4a-b242-8efc1b20fb94.png)
+
+# System Structure
+
 
 
 
