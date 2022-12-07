@@ -76,7 +76,17 @@
 
 ## Install Arudino
 
+```
+sudo install arduino
+```
+
 ## Install Fast API
+
+```
+$ pip3 install fastapi
+$ pip3 install uviconrn
+```
+
 
 ## Install ReactJs
 
