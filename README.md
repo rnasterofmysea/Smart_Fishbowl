@@ -7,28 +7,37 @@
 
 ## 1. Water Temperature Management System
 
+
+![image](https://user-images.githubusercontent.com/81907470/206219565-e28d9a52-3fb6-4740-8f07-bcbf217cd535.png)
+
   - Setting defualt temperature cased by fish type
   - Measuring water temperature apart from water heater
   - Monitoring by senior monitor and controling survo motor to handel heater
   
 ## 2. Feeding System
 
+![image](https://user-images.githubusercontent.com/81907470/206219646-1be88c6e-332e-40e3-ba05-1c2e1bc68f5a.png)
+
+
   - Set feeding time
   - Controling servo motor to dorp feed from the box
   
 ## 3. Filtering System
 
+![image](https://user-images.githubusercontent.com/81907470/206219689-9d90486c-563a-4762-9b18-b923fa66ebf8.png)
+
+
   - Measuring turbidity & sensor to judge water pollution degree
   - Operating water pump if water pullution degree is over
   - Absorbing water from water tank (which planted waterplant)
   
-## 4. Water Level Management System
+## +4. [Alpha] Water Level Management System
 
   - Measuring water level
   - Operating water pump if water level is lower than common level
   - If water level is not filled, alert user to notice it
 
-## 5. PH Level Management System
+## +5. [Alpha] PH Level Management System
 
  - Measuring & monitoring PH level
  - If ph level is caution level, drop water quality medicine
