@@ -7,9 +7,6 @@
 
 ## 1. Water Temperature Management System
 
-
-![image](https://user-images.githubusercontent.com/81907470/206219565-e28d9a52-3fb6-4740-8f07-bcbf217cd535.png)
-
 ### Requirements
   
   1. If user click a button on web/app, operate Arduino by serial moniter
@@ -17,28 +14,45 @@
     1.2 setting temperature
   
   2. If Arduino get a setting temperature, compare it to current temperature.
-    2.1 Send the current temperature to raspiberry pi4
+    2.1 Send the current temperature to raspberry pi4
     
-  3. After comparsion, operate servo motor
-    3.1 Send endpoint to raspiberry pi4
-    
+  3. After comparsion, operate step motor
+    3.1 Send endpoint to raspberry pi4
+  
+  4. print the result by ReactJs
+
+![image](https://user-images.githubusercontent.com/81907470/206219565-e28d9a52-3fb6-4740-8f07-bcbf217cd535.png)
+
   - Setting defualt temperature cased by fish type
   - Measuring water temperature apart from water heater
   - Monitoring by senior monitor and controling survo motor to handel heater
   
 ## 2. Feeding System
 
+  1. If user click a button on web/app, operate Arduino by serial moniter
+  2. If Arduino get a starting point, operatre servo motor
+  3. Send endpoint to raspberry pi4
+  4. print the result by ReactJs
+   
 ![image](https://user-images.githubusercontent.com/81907470/206219646-1be88c6e-332e-40e3-ba05-1c2e1bc68f5a.png)
-
 
   - Set feeding time
   - Controling servo motor to dorp feed from the box
   
 ## 3. Filtering System
 
+  1. If user click a button on web/app, operate Arduino by serial moniter
+  
+  2. Compare current turbidty with standard
+    
+    2.1 send current turbidty to raspiberry pi
+    2.1 while current turbidty over standard, operating water pump
+  
+  3. Send endpoint to raspberry pi4
+  4. print the result by ReactJs
+
 ![image](https://user-images.githubusercontent.com/81907470/206219689-9d90486c-563a-4762-9b18-b923fa66ebf8.png)
-
-
+    
   - Measuring turbidity & sensor to judge water pollution degree
   - Operating water pump if water pullution degree is over
   - Absorbing water from water tank (which planted waterplant)
