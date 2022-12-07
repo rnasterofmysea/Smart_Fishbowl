@@ -79,6 +79,29 @@
 
 # System Structure
 
+```bash
+├── react
+│   ├── ButtonItems
+│   │   └── FeedingItems
+│   │       └── FeedingItems.js
+│   │   └── FilteringItems
+│   │       └── FileringItems.js
+│   │   └── TempItems
+│   │       ├── ItemTemplate.css
+│   │       └── TempItems.js
+│   │   ├── FeedingTemplate.js
+│   │   ├── FilteringTemplate.js
+│   │   ├── ItemTemplate.css
+│   │   └── TempTemplate.js
+│   ├── App.css
+│   ├── App.js
+│   ├── ButtonTemplate.js
+│   └── Template.js
+├── arduino
+│   └── dataset.py
+└── run.sh
+```
+
 # System Tutorial
 
 ## 1. Development Setting
