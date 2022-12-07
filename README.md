@@ -1,6 +1,5 @@
 # Fishbowl-Auto-Management-System
 
-
 # SYSTEM IDEA
 
 ![image](https://user-images.githubusercontent.com/81907470/197466414-c1bfe1f7-9bcd-4f10-b52c-d9b15ba873e8.png)
@@ -33,6 +32,7 @@
 
  - Measuring & monitoring PH level
  - If ph level is caution level, drop water quality medicine
+
 
 # System Configuration
 
@@ -87,14 +87,39 @@ $ pip3 install fastapi
 $ pip3 install uviconrn
 ```
 
-
 ## Install ReactJs
+
+```
+sudo curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
+apt-get install -y nodejs
+```
+```
+$ node -v
+$ npm -v
+```
+
+```
+$ sudo apt-get install build-essential
+```
+
+```
+$ npm install -g create-react-app
+$ create-react-app --version
+$ create-react-app ["project-name"]
+$ npm start
+```
 
 # 2. Aruino Programming
 
+
+
 # 3. Fast API Programming
 
+
+
 # 4. ReactJs Programming
+
+
 
 
 
