@@ -183,12 +183,22 @@ $ npm start
 # 2. Aruino Programming
 
 ```
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include <Stepper.h>
+#include <OneWire.h> //수온센서 라이브러리
+#include <DallasTemperature.h> //수온센서 라이브러리
+#include <Stepper.h> //스탭모터
+#include <Servo.h> //서보모터
 
+//수온센서 연결된 핀
 #define ONE_WIRE_BUS 2
 
+//탁도센서 연결된 핀
+#define TAKDO A1
+
+// 워터펌프 어항 => 화분
+#define WATERPUMP_1 6
+#define WATERPUMP_2 7
+
+#define SERVO 12
 
 //Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
@@ -197,7 +207,7 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 // 2048:한바퀴(360도), 1024:반바퀴(180도)...
-const int stepsPerRevolution = 2048; 
+const int stepsPerRevolution = 2048;
 
 // 모터 드라이브에 연결된 핀 IN4, IN2, IN3, IN1
 Stepper myStepper(stepsPerRevolution,11,9,10,8);
@@ -208,41 +218,55 @@ int post_temp = 30;
 int max_temp = 0;
 int min_temp = 0;
 
+// Servo motor Configuration
+Servo servo;
 
-void default_setting(){
+//온도 초기 세팅
+void default_temperature(int default_temp){
 
   min_temp = 20;
   max_temp = 34;
-  int default_temp = 25;
   //1도가 움직일때 0.6
   // open issue: 소수점 몇째짜리까지 되는지 모름
   rotation = stepsPerRevolution / (max_temp - min_temp);
-  myStepper.step(rotation * (default_temp - min_temp));
-  Serial.print("초기값");
-  Serial.println(rotation * (default_temp - min_temp));
-  delay(5000);
+  // - => 하강
+  // + => 상승
+  myStepper.step(rotation * (default_temp - min_temp + 1.5));
+  delay(3000);
+  Serial.println("end_point");
 }
 
-void setup(){
+//환수 시스템
+void filtering_management(){
 
-  // 온도 센서 설정
-  sensors.begin(); //Start up the libratry
+  int takdo_data = 0;
+  int i = 0;
+  while(i == 0){
+  //탁도 데이터
+    takdo_data = analogRead(TAKDO);
+    takdo_data = takdo_data * 2;
+  
+  //탁도가 기준을 넘어갔을 경우
+    if(takdo_data < 1400){
+      digitalWrite(WATERPUMP_1,HIGH);
+      digitalWrite(WATERPUMP_2,LOW);
+      Serial.println((String) "filtering_management/now_value/" + takdo_data);
+    }else{
+      digitalWrite(WATERPUMP_1,LOW);
+      digitalWrite(WATERPUMP_2,LOW);
 
-  //시리얼 모니터
-  Serial.begin(9600);
-
-  //step motor 속도 설정
-  myStepper.setSpeed(14);
-
-  // 서보모터 0도 초기화
-  Serial.print("초기화+++++");
-  delay(2000);
-  default_setting();
-  //default 값 설정
+      Serial.println((String) "filtering_management/now_value/" + takdo_data);
+      Serial.println("end_point");
+      i = 1;
+    }
+  }
+  // filtering_management/now_value/{data}
+  
 }
 
-void loop(){
-  // int voltage = analogRead(TEMP_PIN);
+//온도 관리 시스템
+void temperature_management(){
+  // int voltage = analogRead(TEMP_PIN);0
   // float temp = voltage * 5.0 * 100 / 1024;
 
   // Send the command to get temperatures
@@ -250,7 +274,7 @@ void loop(){
   float temp = sensors.getTempCByIndex(0);
   Serial.print("\xe2\x84\x83");
   
-  Serial.println(temp);
+  // Serial.println(temp);
 
   float compare_temp = temp - post_temp;
   
@@ -272,20 +296,205 @@ void loop(){
     }
   }
   
-  Serial.print("온도차 ::");
-  Serial.print(compare_temp);
-  Serial.print(" 움직인 각도:: " );
-  Serial.println(rotation * compare_temp);
+  // versionV1
+  // Serial.println((String) "temperature_management/now_value/" + temp);
+  // delay(3000);
+  // Serial.println((String) "temperature_management/diff_value/" + compare_temp);
+  // delay(3000);
+  // Serial.println((String) "temperature_management/rotation_value/" + rotation * compare_temp);
 
+  ///versionV2
+  Serial.println((String) "temperature_management/" + temp + "/" + compare_temp+"/"+rotation * compare_temp);
   delay(3000);
+  Serial.println("end_point");
+}
+
+
+//먹이배급 함수
+void feeding_management(){
+
+  servo.write(180);
+  delay(1000);
+  servo.write(0);
+
+  Serial.println("end_point");
+}
+
+void setup(){
+
+  // 온도 센서 설정
+  sensors.begin(); //Start up the libratry
+
+  //시리얼 모니터
+  Serial.begin(9600);
+
+  //step motor 속도 설정
+  myStepper.setSpeed(2);
+
+  // 서보모터 0도 초기화
+  servo.attach(SERVO);
+  servo.write(0);
+  
+  pinMode(TAKDO,INPUT); //탁도센서 A1핀 입력
+  pinMode(WATERPUMP_1,OUTPUT); //워터펌프1 OUTPUT
+  pinMode(WATERPUMP_2,OUTPUT); //워터펌프2 OUTPUT
 
 }
+
+void loop(){
+
+  //filtering_management();
+  
+  // serial 포트에 들어온 데이터가 있을 경우
+  if(Serial.available() > 0){
+    String inputStr = Serial.readString(); //값 읽기
+    inputStr.trim();
+     if(inputStr.indexOf(".") >= 0){
+        inputStr = inputStr.substring(1, inputStr.length());
+        default_temperature(inputStr.toInt());
+
+     } else if(inputStr.equals("temperature")){
+        temperature_management();
+
+     } else if(inputStr.equals("filtering")){
+        filtering_management();
+
+     } else if(inputStr.equals("feeding")){
+        feeding_management();
+     }
+    }
+  }
 ```
 # 3. Fast API Programming
 
+## Main.py
 
+```
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
+from default_temperature import default_temperature
+#from default_feeding import default_feeding
+from temperature_management import temperature_management 
+from filtering_management import filtering_management
+from feeding_management import feeding_management
+
+import serial
+import time
+from pydantic import BaseModel
+
+app = FastAPI()
+
+port_info = '/dev/ttyACM0'
+baudrate_info = 9600
+arduino = serial.Serial(port=port_info, baudrate = baudrate_info)
+
+
+origins = ['*']
+origins = ["http://localhost:3000"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = origins,
+    allow_credentials = True,
+    allow_methods=['*'],
+    allow_headers=['*']
+        )
+
+#@app.get("/")
+#    return "hello world"
+
+@app.get("/default_temperature/{default_value}")
+def main(default_value: int):
+    default_value = default_value
+    return default_temperature(arduino, default_value)
+
+@app.get("/temperature_management")
+def main():
+    return temperature_management(arduino)
+
+
+@app.get("/filtering_management")
+def main():
+    return filtering_management(arduino)
+
+
+#@app.get("/default_feeding/{default_value}")
+#def main(default_value: int):
+    #default_value = default_value
+    #return default_feeding(default_value)
+
+@app.get("/feeding_management")
+def main():
+    return feeding_management(arduino)
+```
 
 # 4. ReactJs Programming
+
+```
+
+import './App.css';
+import axios from 'axios';
+import React, {useEffect} from 'react';
+import { createGlobalStyle } from 'styled-components';
+import Template from './Component/Template';
+import ButtonTemplate from './Component/ButtonTemplate';
+import TempTemplate from '../src/Component/ButtonItems/TempTemplate'
+import FilteringTemplate from '../src/Component/ButtonItems/FilteringTemplate'
+import FeedingTemplate from './Component/ButtonItems/FeedingTemplate'
+
+import { useState
+ } from 'react';
+const GlobalStyle = createGlobalStyle`
+  body {
+    background: #e9ecef;
+  }
+`;
+
+const App =() => {
+  
+  const [tempToggle, setTempToggle] = useState(false);
+  const [filteringToggle, setFilteringToggle] = useState(false);
+  const [feedingToggle, setFeedingToggle] = useState(false);
+
+  const requestAPI = (route) => {
+    
+    if(route === "temperature_management"){
+      setTempToggle(prev => !prev);
+    }
+    if(route === "filtering_management"){
+      setFilteringToggle(prev => !prev);
+    }
+    if(route === "feeding_management"){
+      setFeedingToggle(prev => !prev);
+    }
+
+    // e.preventDefault();
+    console.log("버튼 동작 테스트");
+  }
+
+  // const shutdownItem = () => {
+  //   setTempToggle(false);
+  //   setFilteringToggle(false);
+  //   setFeedingToggle(false);
+  // }
+  return (
+    <>
+      <GlobalStyle />
+      <Template>
+        {tempToggle && (<TempTemplate/>)}
+        {filteringToggle && (<FilteringTemplate />)}
+        {feedingToggle && (<FeedingTemplate />)}
+
+        <div onClick={()=>requestAPI("temperature_management")}><ButtonTemplate >수온</ButtonTemplate></div>
+        <div onClick={()=>requestAPI("filtering_management")}><ButtonTemplate>탁도</ButtonTemplate> </div>
+        <div onClick={()=>requestAPI("feeding_management")}><ButtonTemplate>먹이</ButtonTemplate> </div>
+        </Template>
+    </>
+  );
+}
+
+export default App;
+
+```
 
 # 5. Test Code (Arduino)
 
