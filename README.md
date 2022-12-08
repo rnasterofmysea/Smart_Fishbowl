@@ -126,8 +126,18 @@
 │   └── Template.js
 ├── flaskapi
 │   ├── main.py
+│   ├── default_temperature.py
+│   ├── default_feeding.py
+│   ├── filtering_management.py
+│   ├── feeding_management.py
+│   ├── readme
+│   └── _pycache_
+│
 ├── arduino
-│   └── dataset.py
+│   └── arduino
+│       └── code
+│           └── main
+│               └── main.ino
 └── run.sh
 ```
 
