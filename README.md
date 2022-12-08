@@ -14,7 +14,7 @@
     1.2 setting temperature
   
   2. If Arduino get a setting temperature, compare it to current temperature.
-  3. 
+  
     2.1 Send the current temperature to raspberry pi4
     
   3. After comparsion, operate step motor
