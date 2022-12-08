@@ -180,6 +180,8 @@ $ create-react-app ["project-name"]
 $ npm start
 ```
 
+## Sensor setting
+
 ![image](https://user-images.githubusercontent.com/81907470/206339486-b780deb8-1c67-44ba-bbb7-114ba2ea5243.png)
 
 
